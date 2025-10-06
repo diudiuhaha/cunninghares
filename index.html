@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cunning Hares Studio</title>
+    <link rel="icon" href="images/logo.ico" type="images/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/i18next@21.6.1/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector@7.0.1/dist/umd/i18nextBrowserLanguageDetector.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #ff6b9d;
+            --secondary-color: #6b5bff;
+            --dark-color: #2d2b55;
+            --light-color: #f8f9fa;
+            --text-color: #333;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: hsla(0, 0%, 100%, 0.5);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏样式 - 毛玻璃效果 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .language-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .language-selector select {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            padding: 0.3rem;
+            color: var(--dark-color);
+            outline: none;
+        }
+        
+        /* 主内容区域 */
+        main {
+            margin-top: 80px;
+        }
+        
+        section {
+            padding: 4rem 2rem;
+            min-height: 100vh;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--dark-color);
+        }
+        
+        /* 主页样式 */
+        #home {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            /* 新增背景图片样式 */
+            background-image: url('images/bigbackground.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white; /* 文字颜色改为白色 */
+        }
+        
+        /* 添加遮罩层增强文字可读性 */
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 半透明黑色遮罩 */
+            z-index: 0;
+        }
+        
+        .home-content {
+            max-width: 800px;
+            z-index: 1;
+            position: relative; /* 确保内容在遮罩层上方 */
+        }
+        
+        .home-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: white; /* 白色文字 */
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* 文字阴影增强可读性 */
+        }
+        
+        .home-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9); /* 浅白色文字 */
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .home-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 91, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(107, 91, 255, 0.4);
+        }
+        
+        /* 商品上新样式 */
+        #new-products {
+            background-color: hsla(0, 0%, 100%, 0.5);
+        }
+        
+        .cards-container {
+            display: flex;
+            overflow-x: hidden;
+            position: relative;
+            padding: 1.5rem 0;
+        }
+        
+        .cards-scroll {
+            display: flex;
+            animation: scroll 30s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .card {
+            flex: 0 0 auto;
+            width: 450px;
+            margin: 0 1.5rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .card-img {
+            width: 100%;
+            height: 338px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .card-desc {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* 征集众筹样式 */
+        #crowdfunding {
+            background-color: hsla(0, 0%, 100%, 0.5);
+            color: black;
+        }
+        
+        .crowdfunding-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .crowdfunding-text {
+            flex: 1;
+            padding-right: 2rem;
+        }
+        
+        .crowdfunding-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .grid-item {
+            aspect-ratio: 1/1;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .grid-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .grid-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 合作案例样式 */
+        #partners {
+             background-color: hsla(0, 0%, 100%, 0.5);
+        }
+        
+        .partner-cards {
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        .partner-scroll {
+            display: flex;
+            animation: scroll-partners 40s linear infinite;
+        }
+        
+        @keyframes scroll-partners {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-33%); }
+        }
+        
+        .partner-card {
+            flex: 0 0 auto;
+            width: 250px;
+            margin: 0 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        
+        .partner-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        /* 帮助中心样式 */
+        #help {
+            background-color: hsla(0, 0%, 100%, 0.5);
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .faq-question {
+            padding: 1rem;
+            background-color: var(--light-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .faq-answer {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-answer.active {
+            padding: 1rem;
+            max-height: 500px;
+        }
+        
+        
+        /* 页脚样式 */
+        footer {
+           background-color: hsla(0, 0%, 100%, 0.5);
+            color: white;
+            padding: 0.5rem 0.5rem;
+        }
+        
+        .footer-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            justify-content: center; /* 新增 - 使链接居中 */
+}
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 0rem; /* 减小了上内边距 */
+            margin-top: 0rem; /* 减小了上外边距 */
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #999;
+            font-size: 0.8rem;
+}
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .home-title {
+                font-size: 2.5rem;
+            }
+            .home-subtitle {
+                font-size: 1.2rem;
+            }
+            .home-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .crowdfunding-content {
+                flex-direction: column;
+            }
+            .crowdfunding-text {
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+            .card {
+                width: 90vw;
+                margin: 0 0.5rem;
+            }
+            .card-img {
+                height: calc(90vw * 0.75);
+            }
+            .footer-container {
+                flex-direction: column;
+            }
+        }
+
+                /* 新增回到顶部按钮样式 */
+        #backToTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        #backToTopBtn.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #backToTopBtn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(107, 91, 255, 0.4);
+        }
+        
+        /* 添加动画效果 */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-15px);}
+            60% {transform: translateY(-7px);}
+        }
+        
+        #backToTopBtn:hover i {
+            animation: bounce 1s;
+        }
+
+
+            /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo" data-i18n="company.name">Cunning Hares Studio</div>
+        <ul class="nav-links">
+            <li><a href="#home" data-i18n="nav.home">首页</a></li>
+            <li><a href="#" id="help-link" data-i18n="nav.help">帮助</a></li>
+            <li><a href="about.html" data-i18n="nav.about">关于</a></li>
+            <li><a href="https://manleculture.feishu.cn/share/base/form/shrcnhQ1J1pixVyhPGT3e8TqqBf" target="_blank" data-i18n="nav.iwant">调查表</a></li>
+            <li><a href="https://c-hares-cos.taobao.com/" target="_blank" data-i18n="nav.buy">购买</a></li>
+        </ul>
+        <div class="language-selector">
+            <select id="languageSelect">
+                <option value="zh-CN">简体中文</option>
+                <option value="zh-TW">繁體中文</option>
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+            </select>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main>
+        <!-- 主页 -->
+        <section id="home">
+            <div class="home-content">
+                <h1 class="home-title" id="homeTitle"></h1>
+                <p class="home-subtitle" id="homeSubtitle"></p>
+                <div class="home-buttons">
+                    <a href="https://c-hares-cos.taobao.com/" class="btn btn-primary" data-i18n="home.taobao">淘宝购买</a>
+                    <button class="btn btn-secondary" id="aliexpressBtn" data-i18n="home.aliexpress">速卖通购买</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 商品上新 -->
+        <section id="new-products">
+            <h2 class="section-title" data-i18n="products.title">商品上新</h2>
+            <div class="cards-container">
+                <div class="cards-scroll">
+                    <!-- 商品卡片将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 征集众筹 -->
+        <section id="crowdfunding">
+            <h2 class="section-title" data-i18n="crowdfunding.title">征集众筹</h2>
+            <div class="crowdfunding-content">
+                <div class="crowdfunding-text">
+                    <p data-i18n="crowdfunding.description">我们正在征集有趣的Cosplay创意！如果您有好的想法，欢迎参与我们的众筹计划。</p>
+                </div>
+                <div class="crowdfunding-grid">
+                    <!-- 九宫格图片将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作案例 -->
+        <section id="partners">
+            <h2 class="section-title" data-i18n="partners.title">合作案例</h2>
+            <div class="partner-cards">
+                <div class="partner-scroll">
+                    <!-- 合作案例卡片将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 帮助中心 -->
+        <section id="help">
+            <h2 class="section-title" data-i18n="help.title">帮助中心</h2>
+            <div class="faq-container">
+                <!-- FAQ将通过JS动态生成 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 简化后的页脚 -->
+    <footer>
+        <div class="copyright">
+            <p >©2025 Cunning Hares Studio all rights reserved.</p>
+        </div>
+    </footer>
+
+        <!-- 新增回到顶部按钮 -->
+    <button id="backToTopBtn" title="回到顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 弹窗结构 -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-content">
+            <h3>正在建设中</h3>
+            <p>您可在官方小红书获取帮助。</p>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-primary" id="goToXhs">前往小红书</button>
+                <button class="modal-btn btn-secondary" id="closeModal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 网站数据配置 - 集中管理所有动态内容
+        const siteData = {
+            // 商品数据
+            products: [
+                {
+                    id: 1,
+                    title: "product1.title",
+                    desc: "product1.desc",
+                    image: "images/product1.webp",
+                    link: "https://example.com/product1"
+                },
+                {
+                    id: 2,
+                    title: "product2.title",
+                    desc: "product2.desc",
+                    image: "images/product2.webp",
+                    link: "https://example.com/product2"
+                }
+            ],
+            //合作案例
+            partners: [
+                {
+                    id: 1,
+                    title: "partner1.title",
+                    desc: "partner1.desc",
+                    image: "images/partner1.webp",
+                    link: "https://www.xiaohongshu.com/explore/68de70e30000000007014dc3?xsec_token=ABdQEPyHVjdUsfr89z-sxzqeLUHLun2uN-8pf0QODZnp4=&xsec_source=pc_user"
+                },
+                                {
+                    id: 2,
+                    title: "partner1.title",
+                    desc: "partner1.desc",
+                    image: "images/partner1.webp",
+                    link: "https://www.xiaohongshu.com/explore/68de70e30000000007014dc3?xsec_token=ABdQEPyHVjdUsfr89z-sxzqeLUHLun2uN-8pf0QODZnp4=&xsec_source=pc_user"
+                }
+            ],
+            //众筹图片和链接
+            crowdfundingImages: [
+                {
+                    id: 1,
+                    image: "images/crowdfunding1.webp",
+                    link: "https://item.taobao.com/item.htm?id=971212024640"
+                },
+                {
+                    id: 2,
+                    image: "images/crowdfunding2.webp",
+                    link: "https://item.taobao.com/item.htm?id=974002110522"
+                },
+                {
+                    id: 3,
+                    image: "images/crowdfunding3.webp",
+                    link: "https://item.taobao.com/item.htm?id=979282410375"
+                },
+                {
+                    id: 4,
+                    image: "images/crowdfunding4.webp",
+                    link: "https://item.taobao.com/item.htm?id=979263914283"
+                },
+                {
+                    id: 5,
+                    image: "images/crowdfunding5.webp",
+                    link: "https://item.taobao.com/item.htm?id=982727336077"
+                },
+                {
+                    id: 6,
+                    image: "images/crowdfunding6.webp",
+                    link: "https://item.taobao.com/item.htm?id=981322254681"
+                }
+            ],
+            faqs: [
+                {
+                    question: "faq.q1",
+                    answer: "faq.a1"
+                },
+                {
+                    question: "faq.q2",
+                    answer: "faq.a2"
+                },
+                {
+                    question: "faq.q3",
+                    answer: "faq.a3"
+                },
+                {
+                    question: "faq.q4",
+                    answer: "faq.a4"
+                }
+            ]
+        };
+
+        // 多语言配置 - 支持5种语言
+        const resources = {
+            'zh-CN': {
+                translation: {
+                    "company.name": "狡兔工坊",
+                    "nav.home": "首页",
+                    "nav.help": "帮助",
+                    "nav.about": "关于",
+                    "nav.buy": "购买",
+                    "nav.iwant": "问卷",
+                    "help.modal.title": "正在建设中",
+                    "help.modal.message": "您可在官方小红书获取帮助。",
+                    "help.modal.goto": "前往小红书",
+                    "help.modal.close": "关闭", 
+                    "home.title": "你好啊，绳匠～", "home.subtitle": "狡兔工坊专注于《绝区零》Cosplay服装和配件制作",
+                    "home.taobao": "淘宝购买", "home.aliexpress": "速卖通购买",
+                    "products.title": "商品上新", "crowdfunding.title": "征集众筹","partners.title": "合作案例", "help.title": "帮助中心",
+                    "crowdfunding.description": "我们正在征集有趣的Cosplay创意！如果您有好的想法，欢迎参与我们的众筹计划。",
+                    // 新增FAQ的翻译
+                    "faq.q1": "如何购买商品？", "faq.a1": "您可以通过淘宝或速卖通平台购买我们的商品。",
+                    "faq.q2": "支持定制吗？", "faq.a2": "是的，我们支持定制服务，请联系客服了解详情。",
+                    "faq.q3": "配送时间需要多久？", "faq.a3": "国内配送一般需要3-7天，国际配送需要7-15天。",
+                    "faq.q4": "如何参与众筹？", "faq.a4": "在征集众筹页面提交您的创意，通过审核后即可开启众筹。",
+                    // 新增商品和合作案例的翻译
+                    "product1.title": "绝区零cos席德cos服", "product1.desc": "",
+                    "product2.title": "席德cos道具小车", "product2.desc": "",
+                    // 新增众筹图片和链接的翻译
+                    "partner1.title": "博主：好多鱼大王", "partner1.desc": "绝区零茶百道联动一日店长席德cos服",
+                }
+            },
+            'zh-TW': {
+                translation: {
+                    "company.name": "Cunning Hares Studio",
+                    "nav.home": "首頁",
+                    "nav.help": "幫助",
+                    "nav.about": "關於",
+                    "nav.buy": "購買",
+                    "nav.iwant": "問卷",
+                    "help.modal.title": "正在建設中",
+                    "help.modal.message": "您可在官方小紅書獲取幫助。",
+                    "help.modal.goto": "前往小紅書",
+                    "help.modal.close": "關閉",
+                    "home.title": "你好啊，繩匠～", "home.subtitle": "狡兔工坊專注於《絕區零》Cosplay服裝和配件制作",
+                    "home.taobao": "淘寶購買", "home.aliexpress": "速賣通購買",
+                    "products.title": "商品上新", "crowdfunding.title": "徵集眾籌","partners.title": "合作案例", "help.title": "幫助中心",
+                    "crowdfunding.description": "我們正在徵集有趣的Cosplay創意！如果您有好的想法，歡迎參與我們的眾籌計劃。",
+
+                    // 新增FAQ的翻译
+                    "faq.q1": "如何購買商品？", "faq.a1": "您可以通過淘寶或速賣通平台購買我們的商品。",
+                    "faq.q2": "支持定制嗎？", "faq.a2": "是的，我們支持定制服務，請聯繫客服了解詳情。",
+                    "faq.q3": "配送時間需要多久？", "faq.a3": "國內配送一般需要3-7天，國際配送需要7-15天。",
+                    "faq.q4": "如何參與眾籌？", "faq.a4": "在徵集眾籌頁面提交您的創意，通過審核後即可開啟眾籌。",
+                    
+                    // 新增商品的翻译
+                    "product1.title": "絕區零cos席德cos服", "product1.desc": "",
+                    "product2.title": "席德cos道具小車", "product2.desc": "",
+
+                    // 新增合作案例的翻译
+                    "partner1.title": "博主：好多魚大王", "partner1.desc": "絕區零茶百道聯動一日店長席德cos服",
+                }
+            },
+            'en': {
+                translation: {
+                    "company.name": "Cunning Hares Studio",
+                    "nav.home": "Home",
+                    "nav.help": "Help",
+                    "nav.about": "About",
+                    "nav.iwant": "Survey",
+                    "nav.buy": "Buy",
+                    "help.modal.title": "Under Construction",
+                    "help.modal.message": "You can get help on official XiaoHongShu.",
+                    "help.modal.goto": "Go to XiaoHongShu",
+                    "help.modal.close": "Close",
+                    "home.title": "hello,Proxy~", "home.subtitle": "Cunning Hares Cosplay Studio specializes in making cosplay costumes for the game 《Zenless Zone Zero》.",
+                    "home.taobao": "Buy on Taobao", "home.aliexpress": "Buy on AliExpress",
+                    "products.title": "New Products", "crowdfunding.title": "Crowdfunding","partners.title": "Partnerships", "help.title": "Help Center",
+                    "crowdfunding.description": "We are collecting interesting Cosplay ideas! If you have a good idea, welcome to participate in our crowdfunding program.",
+
+                    // 新增FAQ的翻译
+                    "faq.q1": "How to purchase products?", "faq.a1": "You can purchase our products through Taobao or AliExpress platforms.",
+                    "faq.q2": "Do you support customization?", "faq.a2": "Yes, we support customization services. Please contact customer service for details.",
+                    "faq.q3": "How long does delivery take?", "faq.a3": "Domestic delivery usually takes 3-7 days, international delivery takes 7-15 days.",
+                    "faq.q4": "How to participate in crowdfunding?", "faq.a4": "Submit your idea on the crowdfunding page. After approval, you can start crowdfunding.",
+
+                    //  新增商品的翻译
+                    "product1.title": "Zenless Zone Zero Seed cosplay clothing", "product1.desc": "",
+                    "product2.title": "seed cosplay tool car", "product2.desc": "",
+
+                    // 新增合作案例的翻译
+                    "partner1.title": "Blogger: Many Fish King", "partner1.desc": "zzz and ChaPanda's one-day store manager seed cosplay",
+                }
+            },
+            'ja': {
+                translation: {
+                    "company.name": "Cunning Hares Studio",
+                    "nav.home": "ホーム",
+                    "nav.help": "ヘルプ",
+                    "nav.about": "約",
+                    "nav.iwant": "アンケート",
+                    "nav.buy": "購入",
+                    "help.modal.title": "建設中",
+                    "help.modal.message": "公式のXiaohongshuから支援を受けることができます。",
+                    "help.modal.goto": "Xiaohongshu",
+                    "help.modal.close": "閉じる",
+                    "home.title": "こんにちは、プロキシ", "home.subtitle": "Cunning Hares Cosplay Studioは、ゲーム《Zenless Zone Zero》のコスプレ衣装を専門に製作しております。",
+                    "home.taobao": "淘宝で購入", "home.aliexpress": "AliExpressで購入",
+                    "products.title": "新商品", "crowdfunding.title": "クラウドファンディング","partners.title": "パートナーシップ", "help.title": "ヘルプセンター",
+                    "crowdfunding.description": "面白いコスプレのアイデアを募集しています！良いアイデアがあれば、私たちのクラウドファンディングプログラムに参加してください。",
+
+                    // 新增FAQ的翻译
+                    "faq.q1": "商品の購入方法は？", "faq.a1": "淘宝またはAliExpressプラットフォームで商品を購入できます。",
+                    "faq.q2": "カスタマイズは対応していますか？", "faq.a2": "はい、カスタマイズサービスに対応しています。詳細はカスタマーサービスまでお問い合わせください。",
+                    "faq.q3": "配送時間はどれくらいかかりますか？", "faq.a3": "国内配送は通常3-7日、国際配送は7-15日かかります。",
+                    "faq.q4": "クラウドファンディングに参加する方法は？", "faq.a4": "クラウドファンディングページでアイデアを提出してください。承認後、クラウドファンディングを開始できます。",
+
+                    // 新增商品的翻译
+                    "product1.title": "ゼンリズゾーン ゼロシード コスプレ衣装", "product1.desc": "",
+                    "product2.title": "シードコスプレツールカー", "product2.desc": "",
+
+                    // 新增合作案例的翻译
+                    "partner1.title": "ブロガー: 多くの魚の王", "partner1.desc": "zzzとチャパンダの一日店長シードコスプレ",
+                }
+            },
+            'ko': {
+                translation: {
+                    "company.name": "Cunning Hares Studio",
+                    "nav.home": "홈",
+                    "nav.help": "도움말",
+                    "nav.about": "약",
+                    "nav.iwant": "설문지",
+                    "nav.buy": "구매",
+                    "help.modal.title": "건설 중",
+                    "help.modal.message": "공식 Xiaohongshu에서 도움을 받을 수 있습니다.",
+                    "help.modal.goto": "Xiaohongshu로 이동",
+                    "help.modal.close": "닫기",
+                    "home.title": "안녕하세요,로프꾼", "home.subtitle": "커닝 헤어스 코스프레 스튜디오는 게임 《젠리스 존 제로》의 코스프레 의상 제작을 전문으로 합니다.",
+                    "home.taobao": "타오바오에서 구매", "home.aliexpress": "알리익스프레스에서 구매",
+                    "products.title": "새 상품", "crowdfunding.title": "크라우드펀딩","partners.title": "파트너십", "help.title": "도움말 센터",
+                    "crowdfunding.description": "재미있는 코스프레 아이디어를 모집 중입니다! 좋은 아이디어가 있으면 우리의 크라우드펀딩 프로그램에 참여해 주세요.",
+                    // 新增FAQ的翻译
+                    "faq.q1": "상품을 어떻게 구매하나요?", "faq.a1": "타오바오 또는 알리익스프레스 플랫폼에서 우리 상품을 구매할 수 있습니다.",
+                    "faq.q2": "맞춤 제작을 지원하나요?", "faq.a2": "네, 맞춤 서비스를 지원합니다. 자세한 내용은 고객 서비스에 문의하세요.",
+                    "faq.q3": "배송 시간은 얼마나 걸리나요?", "faq.a3": "국내 배송은 일반적으로 3-7일, 국제 배송은 7-15일이 소요됩니다.",
+                    "faq.q4": "크라우드펀딩에 어떻게 참여하나요?", "faq.a4": "크라우드펀딩 페이지에서 아이디어를 제출하세요. 승인 후 크라우드펀딩을 시작할 수 있습니다.",
+
+                    // 新增商品的翻译
+                    "product1.title": "젠리스존 제로시드 코스프레 의상", "product1.desc": "",
+                    "product2.title": "시드 코스프레 도구 자동차", "product2.desc": "",
+
+
+                    // 新增合作案例的翻译
+                    "partner1.title": "블로거: Many Fish King", "partner1.desc": "zzz와 차판다의 하루 매니저 시드 코스프레",
+                }
+            }
+        };
+
+        // 初始化i18next多语言库
+        i18next.use(i18nextBrowserLanguageDetector).init({
+            resources,
+            fallbackLng: 'en',
+            interpolation: { escapeValue: false }
+        }, function(err, t) {
+            updateContent(); // 初始化完成后更新页面内容
+            document.getElementById('languageSelect').addEventListener('change', function() {
+                i18next.changeLanguage(this.value, updateContent); // 语言切换事件
+            });
+            document.getElementById('languageSelect').value = i18next.language; // 设置语言选择器初始值
+        });
+
+        // 更新页面内容
+        function updateContent() {
+            // 更新所有带有data-i18n属性的元素
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                element.textContent = i18next.t(key);
+            });
+            
+            // 直接设置首页标题和副标题文本
+            document.getElementById('homeTitle').textContent = i18next.t('home.title');
+            document.getElementById('homeSubtitle').textContent = i18next.t('home.subtitle');
+            
+            generateProductCards(); // 生成商品卡片
+            generateCrowdfundingGrid(); // 生成众筹网格
+            generatePartnerCards(); // 生成合作伙伴卡片
+            generateFAQ(); // 生成FAQ
+        }
+
+        function updateModalContent() {
+            document.querySelector('#helpModal h3').textContent = i18next.t('help.modal.title');
+            document.querySelector('#helpModal p').textContent = i18next.t('help.modal.message');
+            document.getElementById('goToXhs').textContent = i18next.t('help.modal.goto');
+            document.getElementById('closeModal').textContent = i18next.t('help.modal.close');
+            }
+
+        // 生成商品卡片
+        function generateProductCards() {
+            const container = document.querySelector('.cards-scroll');
+            container.innerHTML = '';
+            
+            // 创建两套卡片实现无缝滚动
+            for (let set = 0; set < 2; set++) {
+                siteData.products.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="${product.image}" alt="${i18next.t(product.title)}" class="card-img">
+                        <div class="card-content">
+                            <h3 class="card-title" data-i18n="${product.title}">${i18next.t(product.title)}</h3>
+                            <p class="card-desc" data-i18n="${product.desc}">${i18next.t(product.desc)}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    
+                    // 为整个卡片添加点击事件
+                    card.addEventListener('click', function() {
+                        window.open(product.link, '_blank');
+                    });
+                });
+            }
+        }
+
+        // 生成众筹九宫格
+        function generateCrowdfundingGrid() {
+            const grid = document.querySelector('.crowdfunding-grid');
+            grid.innerHTML = '';
+            
+            siteData.crowdfundingImages.forEach(item => {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.innerHTML = `<img src="${item.image}" alt="Crowdfunding ${item.id}" class="grid-img">`;
+                
+                // 为每个网格项添加点击事件
+                gridItem.addEventListener('click', function() {
+                    window.open(item.link, '_blank');
+                });
+                
+                grid.appendChild(gridItem);
+            });
+        }
+
+        // 生成合作伙伴卡片
+        function generatePartnerCards() {
+            const container = document.querySelector('.partner-scroll');
+            container.innerHTML = '';
+            
+            // 创建三套卡片实现无缝滚动
+            for (let set = 0; set < 3; set++) {
+                siteData.partners.forEach(partner => {
+                    const card = document.createElement('div');
+                    card.className = 'partner-card';
+                    card.innerHTML = `
+                        <img src="${partner.image}" alt="${i18next.t(partner.title)}" class="partner-img">
+                        <div class="card-content">
+                            <h3 class="card-title" data-i18n="${partner.title}">${i18next.t(partner.title)}</h3>
+                            <p class="card-desc" data-i18n="${partner.desc}">${i18next.t(partner.desc)}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    
+                    // 为整个卡片添加点击事件
+                    card.addEventListener('click', function() {
+                        window.open(partner.link, '_blank');
+                    });
+                });
+            }
+        }
+
+        // 生成FAQ
+        function generateFAQ() {
+            const container = document.querySelector('.faq-container');
+            container.innerHTML = '';
+            
+            siteData.faqs.forEach((faq, index) => {
+                const faqItem = document.createElement('div');
+                faqItem.className = 'faq-item';
+                faqItem.innerHTML = `
+                    <div class="faq-question">
+                        <span data-i18n="${faq.question}">${i18next.t(faq.question)}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="${faq.answer}">${i18next.t(faq.answer)}</p>
+                    </div>
+                `;
+                const question = faqItem.querySelector('.faq-question');
+                const answer = faqItem.querySelector('.faq-answer');
+                const icon = faqItem.querySelector('i');
+                question.addEventListener('click', function() {
+                    answer.classList.toggle('active');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+                container.appendChild(faqItem);
+            });
+        }
+
+        // 速卖通按钮事件
+        document.getElementById('aliexpressBtn').addEventListener('click', function() {
+            alert(i18next.language === 'zh-CN' || i18next.language === 'zh-TW' ? 
+                  '敬请期待' : 
+                  i18next.language === 'ja' ? 
+                  '近日公開予定' : 
+                  i18next.language === 'ko' ? 
+                  '곧 출시 예정' : 
+                  'Coming Soon');
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 修复的平滑滚动导航 - 只对页面内锚点链接生效
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    // 只对以#开头的锚点链接应用平滑滚动
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                    // 对于外部链接和其他页面链接，不阻止默认行为
+                });
+            });
+            
+            generateProductCards();
+            generateCrowdfundingGrid();
+            generatePartnerCards();
+            generateFAQ();
+            updateModalContent();
+        });
+
+        // 回到顶部按钮功能
+        const backToTopBtn = document.getElementById('backToTopBtn');
+        
+        // 监听滚动事件显示/隐藏按钮
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // 点击按钮回到顶部
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 帮助链接弹窗功能
+        document.getElementById('help-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('helpModal').style.display = 'flex';
+        });
+
+        // 关闭弹窗
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('helpModal').style.display = 'none';
+        });
+
+        // 前往小红书
+        document.getElementById('goToXhs').addEventListener('click', function() {
+            window.open('https://www.xiaohongshu.com/user/profile/685cd2a6000000001d017a23', '_blank');
+            document.getElementById('helpModal').style.display = 'none';
+        });
+
+        // 点击遮罩层关闭弹窗
+        document.getElementById('helpModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>
